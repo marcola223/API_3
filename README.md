@@ -18,6 +18,8 @@ Dados Relacionais: Uso de JOIN para conectar livros aos seus respectivos autores
 
 Qualidade Garantida: Testes automatizados com Jest e Supertest.
 
+
+
 🛠️ Tecnologias
 Node.js & Express.js
 
@@ -29,17 +31,22 @@ Bcrypt (Segurança de dados)
 
 Jest & Supertest (TDD/Testes)
 
+
+
 🌱 Populando o Banco (Seed)
 Para gerar automaticamente os 20 livros clássicos para testes e visualização:
 node seed.js
+
 
 🧪 Rodando os Testes
 Mantenha a qualidade do código sempre em dia:
 npm test
 
+
 🔐 Autenticação
 Esta API utiliza JWT. Após fazer o login, você receberá um token. Lembre-se de incluí-lo no Header de todas as rotas protegidas:
 Authorization: Bearer <seu_token>
+
 
 📌 Rotas da API
 👤 Autenticação (Auth)
@@ -58,6 +65,7 @@ DELETE /books/:id - Remover um livro da coleção.
 
 GET /books-details - Listar livros com informações detalhadas de quem os cadastrou (JOIN).
 
+
 📊 Parâmetros de Busca (Query Params)
 page: Número da página (ex: 1)
 
@@ -68,6 +76,8 @@ sort: Campo para ordenar (ex: title, year)
 order: Ordem da lista (ASC ou DESC)
 
 genre: Filtrar por gênero específico (ex: Fantasia)
+
+
 
 ✅ Status Codes
 200 → Sucesso
@@ -81,6 +91,8 @@ genre: Filtrar por gênero específico (ex: Fantasia)
 404 → Recurso não encontrado
 
 500 → Erro interno no servidor
+
+
 
 👨‍💻 Autor
 Marcos
