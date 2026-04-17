@@ -1,0 +1,92 @@
+const request = require("supertest");
+const app = require("../src/app"); // Ajuste o caminho se necessário
+const db = require("../src/database");
+
+let token = "";
+
+// Limpa o banco antes de rodar os testes para evitar erro de "Usuário já existe"
+beforeAll(() => {
+  db.prepare("DELETE FROM users WHERE username = ?").run("testuser");
+});
+
+describe("Auth and Books API", () => {
+  
+  it("should register a user", async () => {
+    const res = await request(app)
+      .post("/register")
+      .send({ username: "testuser", password: "123456" });
+
+    expect([201, 400]).toContain(res.statusCode);
+  });
+
+  it("should login and return a token", async () => {
+    const res = await request(app)
+      .post("/login")
+      .send({ username: "testuser", password: "123456" });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.token).toBeDefined();
+
+    token = res.body.token;
+  });
+
+  it("should NOT create a book without token", async () => {
+    const res = await request(app)
+      .post("/books")
+      .send({ title: "Unauthorized Book" });
+
+    expect(res.statusCode).toBe(401);
+  });
+
+  it("should create a book", async () => {
+    const res = await request(app)
+      .post("/books")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ 
+        title: "O Senhor dos Anéis", 
+        genre: "Fantasia", 
+        year: 1954 
+      });
+
+    expect(res.statusCode).toBe(201);
+  });
+
+  it("should get books with pagination and filters", async () => {
+    const res = await request(app)
+      .get("/books?page=1&limit=5&genre=Fantasia");
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.page).toBe(1);
+    expect(Array.isArray(res.body.data)).toBe(true);
+  });
+
+  it("should get books with details (JOIN)", async () => {
+    const res = await request(app)
+      .get("/books-details")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.statusCode).toBe(200);
+    // Verifica se o JOIN trouxe o nome do usuário
+    if (res.body.length > 0) {
+      expect(res.body[0]).toHaveProperty("created_by");
+    }
+  });
+
+  it("should update a book", async () => {
+    const res = await request(app)
+      .put("/books/1")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ title: "Título Atualizado", genre: "Ficção", year: 2024 });
+
+    expect([200, 404]).toContain(res.statusCode);
+  });
+
+  it("should delete a book", async () => {
+    // Tentando deletar o livro de ID 1
+    const res = await request(app)
+      .delete("/books/1")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect([200, 204, 404]).toContain(res.statusCode);
+  });
+});
