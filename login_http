@@ -1,0 +1,70 @@
+### Registro de Usuário
+POST http://localhost:3000/register
+Content-Type: application/json
+
+{
+  "username": "marquin",
+  "password": "123"
+}
+
+###
+
+###  Login (Para Obter Token)
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "username": "marquin",
+  "password": "123"
+}
+
+###
+
+# ⚠️ APÓS O LOGIN, COPIE O TOKEN E COLE ABAIXO:
+@token = INSIRA_O_TOKEN_AQUI
+
+###
+
+### 📚 Listar todos os Livros (Público - Sem Token)
+# Demonstração de Filtros, Ordenação e Paginação
+GET http://localhost:3000/books?page=1&limit=5&genre=Fantasia&sort=year&order=desc
+
+###
+
+### 📖 Adicionar Novo Livro (Protegido)
+POST http://localhost:3000/books
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "O Silmarillion",
+  "genre": "Fantasia",
+  "year": 1977,
+  "author_id": 1
+}
+
+###
+
+### 📝 Atualizar Livro (Protegido)
+PUT http://localhost:3000/books/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "O Hobbit - Edição Especial",
+  "genre": "Fantasia",
+  "year": 1937
+}
+
+###
+
+### ❌ Deletar Livro (Protegido)
+# Substitua o '21' pelo ID do livro que deseja apagar
+DELETE http://localhost:3000/books/21
+Authorization: Bearer {{token}}
+
+###
+
+### 👤 Listar Autores (Público - Para ver os IDs disponíveis)
+GET http://localhost:3000/books
+# Nota: O nome do autor já vem dentro do objeto do livro via JOIN
