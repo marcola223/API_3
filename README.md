@@ -1,101 +1,229 @@
-📚 Library API
-Uma API RESTful robusta construída com Node.js, Express e SQLite que permite aos usuários gerenciar sua coleção pessoal de livros com total segurança e organização.
+-----
 
-🚀 Live Demo: https://library-api-seu-link.onrender.com/books
+# 📚 Library API
 
-🚀 Funcionalidades
-Segurança: Registro de usuários e login com autenticação JWT.
+Uma API RESTful construída com Node.js, Express e SQLite que permite aos usuários gerenciar sua coleção pessoal de livros com autenticação e segurança.
 
-Privacidade: Criptografia de senhas com bcrypt.
+Check it out here: [https://library-api-marcos.onrender.com/books](https://www.google.com/search?q=https://library-api-marcos.onrender.com/books)
 
-Gestão Completa (CRUD): Controle total sobre sua biblioteca de livros.
+-----
 
-Performance: Banco de dados SQLite rápido e eficiente.
+## 🚀 Features
 
-Filtros Avançados: Busca por gênero, ordenação customizada e paginação.
+  - Registro de usuários e login (Autenticação JWT)
+  - Criptografia de senhas com bcrypt
+  - CRUD completo de livros
+  - Banco de dados SQLite (Better-SQLite3)
+  - Rotas protegidas por middleware
+  - Filtragem, ordenação e paginação de dados
+  - Dados relacionais usando JOIN (usuários ↔ livros)
+  - Testes automatizados com Jest e Supertest
 
-Dados Relacionais: Uso de JOIN para conectar livros aos seus respectivos autores/usuários.
+-----
 
-Qualidade Garantida: Testes automatizados com Jest e Supertest.
+## 🛠️ Technologies
 
+  - Node.js
+  - Express.js
+  - SQLite
+  - JSON Web Token (JWT)
+  - bcrypt
+  - Jest
+  - Supertest
 
+-----
 
-🛠️ Tecnologias
-Node.js & Express.js
+## 📦 Installation
 
-Better-SQLite3 (Performance SQL)
+```bash
+git clone <your-repo-url>
+cd library-api
+npm install
+```
 
-JSON Web Token (JWT)
+-----
 
-Bcrypt (Segurança de dados)
+## ⚙️ Environment Variables
 
-Jest & Supertest (TDD/Testes)
+Crie um arquivo `.env` na raiz do projeto:
 
+```env
+PORT=3000
+TOKEN_SECRET=sua_chave_secreta_aqui
+```
 
+-----
 
-🌱 Populando o Banco (Seed)
-Para gerar automaticamente os 20 livros clássicos para testes e visualização:
-node seed.js
+## ▶️ Running the Project
 
+```bash
+node app.js
+```
 
-🧪 Rodando os Testes
-Mantenha a qualidade do código sempre em dia:
+Server will run on:
+
+```
+http://localhost:3000
+```
+
+-----
+
+## 🧪 Running Tests
+
+```bash
 npm test
+```
 
+-----
 
-🔐 Autenticação
-Esta API utiliza JWT. Após fazer o login, você receberá um token. Lembre-se de incluí-lo no Header de todas as rotas protegidas:
+## 🌱 Seeding the Database
+
+Para criar pelo menos 20 registros de livros clássicos:
+
+```bash
+node seed.js
+```
+
+-----
+
+## 🔐 Authentication
+
+Esta API utiliza autenticação via JWT.
+Após o login, inclua o token nos headers das requisições protegidas:
+
+```
 Authorization: Bearer <seu_token>
+```
 
+-----
 
-📌 Rotas da API
-👤 Autenticação (Auth)
-POST /register - Criar nova conta de usuário.
+## 📌 API Routes
 
-POST /login - Autenticar usuário e obter token de acesso.
+### 👤 Auth
 
-📖 Livros (Protegido)
-POST /books - Cadastrar um novo livro na coleção.
+#### Register
 
-GET /books - Listar livros (Suporta filtros: page, limit, genre, sort, order).
+**POST** `/register`
 
-PUT /books/:id - Atualizar informações de um livro existente.
+```json
+{
+  "username": "user",
+  "password": "123456"
+}
+```
 
-DELETE /books/:id - Remover um livro da coleção.
+#### Login
 
-GET /books-details - Listar livros com informações detalhadas de quem os cadastrou (JOIN).
+**POST** `/login`
 
+```json
+{
+  "username": "user",
+  "password": "123456"
+}
+```
 
-📊 Parâmetros de Busca (Query Params)
-page: Número da página (ex: 1)
+-----
 
-limit: Itens por página (ex: 5)
+### 📖 Books (Protected)
 
-sort: Campo para ordenar (ex: title, year)
+#### Create Book
 
-order: Ordem da lista (ASC ou DESC)
+**POST** `/books`
 
-genre: Filtrar por gênero específico (ex: Fantasia)
+```json
+{
+  "title": "O Senhor dos Anéis",
+  "genre": "Fantasia",
+  "year": 1954
+}
+```
 
+#### Get Books (with filters)
 
+**GET** `/books?page=1&limit=5&sort=title&order=ASC&genre=Fantasia`
 
-✅ Status Codes
-200 → Sucesso
+#### Update Book
 
-201 → Criado com sucesso
+**PUT** `/books/:id`
 
-400 → Requisição inválida
+```json
+{
+  "title": "1984 - Edição Revisada"
+}
+```
 
-401 → Não autorizado (Token ausente ou inválido)
+#### Delete Book
 
-404 → Recurso não encontrado
+**DELETE** `/books/:id`
 
-500 → Erro interno no servidor
+#### Get Books with Users (JOIN)
 
+**GET** `/books-details`
 
+-----
 
-👨‍💻 Autor
+## 📊 Query Parameters
+
+| Parameter | Description               |
+| --------- | ------------------------- |
+| page      | Número da página          |
+| limit     | Itens por página          |
+| sort      | Campo para ordenar (id, title, year) |
+| order     | ASC ou DESC               |
+| genre     | Filtrar por gênero        |
+
+-----
+
+## 📬 Postman Collection
+
+Importe o arquivo `.json` fornecido no Postman para testar todas as rotas rapidamente.
+
+-----
+
+## 🚀 Deployment
+
+Esta API pode ser hospedada em:
+
+  - Render
+  - Railway
+
+Certifique-se de configurar as variáveis de ambiente na plataforma de deploy.
+
+-----
+
+## ✅ Status Codes
+
+  - 200 → Success
+  - 201 → Created
+  - 400 → Bad Request
+  - 401 → Unauthorized
+  - 403 → Forbidden
+  - 404 → Not Found
+  - 500 → Server Error
+
+-----
+
+## 📁 Project Structure
+
+```
+project/
+├── app.js
+├── database.js
+├── seed.js
+├── app.test.js
+├── package.json
+└── .env
+```
+
+-----
+
+## 👨‍💻 Author
+
 Marcos
 
-📄 Licença
-Este projeto foi desenvolvido para fins educacionais e de portfólio pessoal.
+-----
+
+## 📄 License
+
+Este projeto é para fins educacionais e de portfólio.
