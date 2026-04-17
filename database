@@ -72,7 +72,7 @@ if (check.count === 0) {
   });
 
   transaction(books);
-  console.log("✅ 20 Livros e 5 Autores inseridos com sucesso!");
+  console.log(" 20 Livros e 5 Autores inseridos com sucesso!");
 }
 
 module.exports = db;
