@@ -1,0 +1,78 @@
+const Database = require('better-sqlite3');
+const db = new Database('library.db');
+
+db.pragma('foreign_keys = ON');
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS authors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    nationality TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS books (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    genre TEXT,
+    year INTEGER,
+    author_id INTEGER,
+    FOREIGN KEY (author_id) REFERENCES authors (id)
+  );
+
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE,
+    password TEXT
+  );
+`);
+
+const check = db.prepare('SELECT count(*) as count FROM books').get();
+
+if (check.count === 0) {
+  console.log("Populando banco de dados com 20 registros...");
+
+  // 1. Inserir Autores
+  const insertAuthor = db.prepare('INSERT INTO authors (id, name, nationality) VALUES (?, ?, ?)');
+  const authors = [
+    [1, 'J.R.R. Tolkien', 'Britânico'],
+    [2, 'George Orwell', 'Britânico'],
+    [3, 'Machado de Assis', 'Brasileiro'],
+    [4, 'Agatha Christie', 'Britânica'],
+    [5, 'Isaac Asimov', 'Russo-Americano']
+  ];
+  authors.forEach(auth => insertAuthor.run(...auth));
+
+
+  const insertBook = db.prepare('INSERT INTO books (title, genre, year, author_id) VALUES (?, ?, ?, ?)');
+  const books = [
+    ['O Hobbit', 'Fantasia', 1937, 1],
+    ['A Sociedade do Anel', 'Fantasia', 1954, 1],
+    ['As Duas Torres', 'Fantasia', 1954, 1],
+    ['O Retorno do Rei', 'Fantasia', 1955, 1],
+    ['1984', 'Distopia', 1949, 2],
+    ['A Revolução dos Bichos', 'Sátira', 1945, 2],
+    ['Dom Casmurro', 'Clássico', 1899, 3],
+    ['Memórias Póstumas de Brás Cubas', 'Clássico', 1881, 3],
+    ['Quincas Borba', 'Clássico', 1891, 3],
+    ['O Alienista', 'Sátira', 1882, 3],
+    ['E Não Sobrou Nenhum', 'Mistério', 1939, 4],
+    ['O Assassinato no Expresso do Oriente', 'Mistério', 1934, 4],
+    ['Morte no Nilo', 'Mistério', 1937, 4],
+    ['A Mansão Hollow', 'Mistério', 1946, 4],
+    ['Fundação', 'Ficção Científica', 1951, 5],
+    ['Fundação e Império', 'Ficção Científica', 1952, 5],
+    ['Segunda Fundação', 'Ficção Científica', 1953, 5],
+    ['Eu, Robô', 'Ficção Científica', 1950, 5],
+    ['O Fim da Eternidade', 'Ficção Científica', 1955, 5],
+    ['Caves of Steel', 'Ficção Científica', 1954, 5]
+  ];
+
+  const transaction = db.transaction((data) => {
+    for (const book of data) insertBook.run(...book);
+  });
+
+  transaction(books);
+  console.log("✅ 20 Livros e 5 Autores inseridos com sucesso!");
+}
+
+module.exports = db;
