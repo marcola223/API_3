@@ -1,0 +1,16 @@
+app.put('/api/tarefas/:id', (req, res) => {
+  try {
+    const { titulo, concluida } = req.body;
+    const { id } = req.params;
+
+    const stmt = db.prepare(
+      'UPDATE tarefas SET titulo = ?, concluida = ? WHERE id = ?'
+    );
+
+    stmt.run(titulo, concluida, id);
+
+    res.status(200).json({ mensagem: 'Tarefa atualizada' });
+  } catch (erro) {
+    res.status(500).json({ erro: 'Erro interno' });
+  }
+});
